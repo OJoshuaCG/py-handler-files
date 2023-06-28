@@ -1,0 +1,12 @@
+rest:
+  url: "https://example.org/primenumbers/v1"
+  puerto: 8443
+
+numeros_primos: [2, 3, 5, 7, 11, 13, 17, 19]
+
+---
+plantilla: |
+  Hola mundo
+  Esto es un texto
+  Multi linea
+  Gracias!

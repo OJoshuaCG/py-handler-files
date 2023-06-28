@@ -18,11 +18,11 @@ for fichero in scandir(raiz):
 for fichero in scandir(raiz):
     if fichero.is_file():
         directorio, extension = path.splitext(fichero)
-        print(f"Archivo: {directorio} === Extension: {extension}")
+        print(f"Archivo: {directorio} --> Extension: {extension}")
 
-# # Obtener raiz, carpetas y archivos
-directorio, carpetas, ficheros = next(walk(raiz))
-print("Raiz:    ", directorio)
+# Obtener ruta, carpetas y archivos
+ruta, carpetas, ficheros = next(walk(raiz))
+print("Ruta:    ", ruta)
 print("Carpeta: ", carpetas)
 print("Fichero: ", ficheros)
 print()
@@ -37,7 +37,24 @@ print()
 
 # ========== Usando la libreria Path ==========
 
-# for fichero in scandir(raiz):
-#     if fichero.is_file():
-#         extension = path.splitext(fichero)[1]
-#         print(extension)
+raiz = Path(".")
+
+# Listar todos los ficheros
+for fichero in raiz.iterdir():
+    print(fichero)
+
+# Obtener archivos y carpetas por separados
+for fichero in raiz.iterdir():
+    if fichero.is_dir():
+        print("Carpeta : ", fichero)
+    elif fichero.is_file():
+        print("Archivo : ", fichero)
+
+# # Obtener ruta de los archivos
+for fichero in raiz.iterdir():
+    if fichero.is_file():
+        print("Ruta:  ", fichero.parent)
+        print("Archivo:     ", fichero.name)
+        print("Extension:   ", fichero.suffix)
+        print("Extensiones: ", fichero.suffixes)  # ''.join(fichero.suffixes))
+        print()
