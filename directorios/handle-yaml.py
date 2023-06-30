@@ -27,14 +27,29 @@ with open("archivo2.yaml", 'r') as archivo:
         print(_)
         print(type(_))
 
+
 # Escribir un archivo yaml
 documento = """
 id: 1
 nombre: 'Joshua'
 edad: 23
 """
+
 with open('archivo3.yaml', 'w') as archivo:
-    yaml.dump(documento, archivo, yaml.Dumper)
+    # yaml.dump(yaml.safe_load(documento), archivo, yaml.Dumper)
+    # OR
+    yaml.safe_dump(yaml.safe_load(documento), archivo)
+
+
+# Escribir en un archivo yaml con un diccionario
+documento = {
+    "id": 7,
+    "nombre": "Orlando",
+    "apellido": "Carrasco"
+}
+
+with open('archivo3.yaml', 'w') as archivo:
+    yaml.safe_dump(documento, archivo)
 
 
 # ========== ruamel.yaml ==========
@@ -56,7 +71,6 @@ with open("archivo2.yaml", 'r') as archivo:
         print(_)
         print(type(_))
 
-
 # Escribir un archivo yaml
 # Inicializamos el objeto nuevamente (para escribir con string)
 ryaml.__init__()
@@ -75,12 +89,14 @@ archivo = Path("./archivo3.yaml")
 ryaml.dump(ryaml.load(documento), archivo)
 print("escritura 2")
 
-ryaml.__init__(typ="safe")  # opcional en este punto
+# Escribir en un archivo yaml con un diccionario
+# ryaml.__init__(typ='safe') # Opcional, se puede usar el parametro typ='safe'
 documento = {
     "id": 7,
     "nombre": "Orlando",
     "apellido": "Carrasco"
 }
+archivo = Path("./archivo3.yaml")
 
 ryaml.dump(documento, archivo)
 print("escritura 3")

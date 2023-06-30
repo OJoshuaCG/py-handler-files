@@ -34,5 +34,8 @@ diccionario = {
 }
 
 texto = json.dumps(diccionario, indent=4)
+# Otros parametros para 'dumps'
+# (objeto, indent=4, sort_keys=True, separators=(('. ', ' = ')))
+# separators por default: (',', ': ')
 
 diccionario = json.loads(texto)
