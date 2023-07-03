@@ -1,1 +1,6 @@
 hola mundo
+Como estan? escrito desde python! escrito desde python! escrito desde python!
+Como dicen que estan?
+Que hacen?
+Saludos!
+Nueva linea desde python!
