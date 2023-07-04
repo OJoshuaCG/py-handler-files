@@ -34,14 +34,29 @@ print(f"Celda A1: {celda_A1}")
 celda_A1 = sheet.cell(row=1, column=1).value
 print(f"Celda A1: {celda_A1}")
 
-# Iterando sobre una fila, en este caso, el encabezado
-header = [sheet.cell(
-    row=1, column=i).value for i in range(1, sheet.max_column+1)]
-print(header)
+# Obtener un rango de celdas:
+data = sheet["A"]       # Columna A
+data = sheet["A:B"]     # Columna A -> B
+data = sheet["2"]       # Fila 2
+data = sheet["2:3"]     # Fila 2 -> 3
+data = sheet["A1:C2"]   # Rango A1 -> C2
 
-# Iterando sobre una columna
-data_B = [sheet.cell(row=i, column=2).value for i in range(2, 12)]
-print(data_B)
+
+# Iterar sobre filas:
+for row in sheet.iter_rows(min_row=1, max_row=2, min_col=1, max_col=3):
+    print(row)
+
+# Iterar sobre columnas:
+for column in sheet.iter_rows(min_row=1, max_row=2, min_col=1, max_col=3):
+    print(column)
+
+# # Iterar sobre toda la hoja:
+# for row in sheet.rows:
+#     print(row)
+
+# for column in sheet.colums:
+#     print(column)
+
 
 # Escribiendo en la hoja
 sheet['K1'] = "Suma de las ventas"
@@ -50,8 +65,17 @@ workbook.save("copia-videogamesales.xlsx")
 
 workbook.close()
 
-
 # Source:
 # - https://www.datacamp.com/tutorial/python-excel-tutorial
 # - https://www.geeksforgeeks.org/working-with-excel-spreadsheets-in-python/
 # - https://realpython.com/openpyxl-excel-spreadsheets-python/
+
+
+# # Iterando sobre una fila, en este caso, el encabezado
+# header = [sheet.cell(
+#     row=1, column=i).value for i in range(1, sheet.max_column+1)]
+# print(header)
+
+# # Iterando sobre una columna
+# data_B = [sheet.cell(row=i, column=2).value for i in range(2, 12)]
+# print(data_B)
