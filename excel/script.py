@@ -69,7 +69,7 @@ workbook.close()
 # - https://www.datacamp.com/tutorial/python-excel-tutorial
 # - https://www.geeksforgeeks.org/working-with-excel-spreadsheets-in-python/
 # - https://realpython.com/openpyxl-excel-spreadsheets-python/
-
+# - https://pybonacci.org/2021/03/10/curso-sobre-como-trabajar-con-hojas-de-calculo-excel-calc-usando-openpyxl-en-python-iii/
 
 # # Iterando sobre una fila, en este caso, el encabezado
 # header = [sheet.cell(
