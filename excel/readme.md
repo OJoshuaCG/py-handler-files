@@ -4,6 +4,7 @@
 pip install openpyxl
 ```
 
+
 ---
 ## Crear un excel o cargar un excel
 
@@ -90,8 +91,6 @@ sheet.delete_cols(idx, amount)
 
 ```python
 from openpyxl.styles import Font, Color, Alignment, Border, Side, PatternFill, NamedStyle
-# from openpyxl.styles.differential import DifferentialStyle
-# from openpyxl.formatting.rule import Rule
 
 sheet['A1'].font = Font(
   size=16
@@ -104,7 +103,9 @@ sheet['A1'].alignment = Alignment(
   horizontal="center",
   vertical="top")
 
-# boder_style = {'dotted', 'thick', 'mediumDashed', 'medium', 'slantDashDot', 'mediumDashDotDot', 'mediumDashDot', 'dashDot', 'hair', 'double', 'thin', 'dashDotDot', 'dashed'}
+# boder_style = {'dotted', 'thick', 'mediumDashed',
+#  'medium', 'slantDashDot', 'mediumDashDotDot', 'mediumDashDot',
+#  'dashDot', 'hair', 'double', 'thin', 'dashDotDot', 'dashed'}
 double_border_side = Side(border_style="double")
 
 sheet['A1'].border = Border(
@@ -136,11 +137,12 @@ from openpyxl.formatting.rule import Rule
 
 # Creando el color a rellenar
 red_background = PatternFill(fgColor="00FF0000")
+
 # Creando el objeto que tendra los estilos que seran diferenciadores
 # En este mismo, se pueden añadir mas estilos
 diff_style = DifferentialStyle(fill=red_background)
 
-# Se crea la regla
+# Se crea la regla y debajo se define la formula o expresion a evaluar
 rule = Rule(type="expression", dxf=diff_style)
 rule.formula = ["$H1<3"]
 
@@ -150,6 +152,7 @@ workbook.save("sample_conditional_formatting.xlsx")
 ```
 
 Las reglas nos permiten crear 3 formatos diferentes.
+
 
 - **ColorScale**. Recibe un valor minimo, el color para ese valor minimo, un valor maximo y el color del valor maximo.
 
@@ -163,43 +166,139 @@ Las reglas nos permiten crear 3 formatos diferentes.
   end_type="max",
   end_color="0000FF00")  # Green
 
- # Se agrega la regla a un rango de celdas
- sheet.conditional_formatting.add("H2:H100", color_scale_rule)
+ # Se agrega la regla al rango de celdas de la COLUMNA
+ sheet.conditional_formatting.add("C2:C20", color_scale_rule)
  workbook.save(filename="sample_conditional_formatting_color_scale.xlsx")
 
- # Otro ejemplo de una regla de escala
+ # Otro ejemplo de una regla de escala con valores mas especificos
 color_scale_rule = ColorScaleRule(
-  start_type="num",
-  start_value=1,
-  start_color="00FF0000",  # Red
-  mid_type="num",
-  mid_value=3,
-  mid_color="00FFFF00",  # Yellow
-  end_type="num",
-  end_value=5,
-  end_color="0000FF00")  # Green
+  start_type="num", start_value=1, start_color="00FF0000",  # Red
+  mid_type="num", mid_value=3, mid_color="00FFFF00",  # Yellow
+  end_type="num", end_value=5, end_color="0000FF00")  # Green
 ```
 
-- **IconSet**. Se agrega un icono de acuerdo a su valor.
+
+- **IconSet**. Se agrega un icono de acuerdo a su valor, ya sea un numero o porcentaje
 
 ```python
+from openpyxl.formatting.rule import IconSet, FormatObject, Rule
+
+first = FormatObject(type='percent', val=0)
+second = FormatObject(type='percent', val=33)
+third = FormatObject(type='percent', val=67)
+
+# iconSet = {‘3Arrows’, ‘3ArrowsGray’, ‘3Flags’, ‘3TrafficLights1’,
+#  ‘3TrafficLights2’, ‘3Signs’, ‘3Symbols’, ‘3Symbols2’,
+#  ‘4Arrows’, ‘4ArrowsGray’, ‘4RedToBlack’, ‘4Rating’,
+# ‘4TrafficLights’, ‘5Arrows’, ‘5ArrowsGray’, ‘5Rating’, ‘5Quarters’}
+icon_set = IconSet(
+  iconSet='3TrafficLights1',
+  cfvo=[first, second, third],
+  showValue=None,
+  percent=None,
+  reverse=None)
+
+# lo asignamos a una regla
+icon_set_rule = Rule(type='iconSet', iconSet=icon_set)
+
+# ------------
+# Otra manera:
+# ------------
+
 from openpyxl.formatting.rule import IconSetRule
 
-# {‘3Arrows’, ‘3ArrowsGray’, ‘3Flags’, ‘3TrafficLights1’, ‘3TrafficLights2’, ‘3Signs’, ‘3Symbols’, ‘3Symbols2’, ‘4Arrows’, ‘4ArrowsGray’, ‘4RedToBlack’, ‘4Rating’, ‘4TrafficLights’, ‘5Arrows’, ‘5ArrowsGray’, ‘5Rating’, ‘5Quarters’}
 icon_set_rule = IconSetRule("5Arrows", "num", [1, 2, 3, 4, 5])
 
-sheet.conditional_formatting.add("H2:H100", icon_set_rule)
-workbook.save("sample_conditional_formatting_icon_set.xlsx")
+# or
+icon_set_rule = IconSetRule(
+  '5Arrows',
+  'percent',
+  [10, 20, 30, 40, 50],
+  showValue=None,
+  percent=None,
+  reverse=None)
 
+sheet.conditional_formatting.add("C2:C20", icon_set_rule)
+workbook.save("sample_conditional_formatting_icon_set.xlsx")
+```
+
+
+- **DataBar**. Agrega una barra de progreso de acuerdo al valor
+
+```python
+from openpyxl.formatting.rule import DataBarRule
+
+data_bar_rule = DataBarRule(
+  start_type="num",
+  start_value=1,
+  end_type="num",
+  end_value="5",
+  color="0000FF00",  # Green
+  showValue=None,
+  minLength=None,
+  maxLength=None)
+
+sheet.conditional_formatting.add("C2:C20", data_bar_rule)
+workbook.save("sample_conditional_formatting_data_bar.xlsx")
 ```
 
 ---
-## Imagenes y graficas
+## Graficas
+
+openpyxl soporta los siguientes graficos:
+
+- Area Charts
+  - 2D Area Charts
+  - 3D Area Charts
+- Bar and Column Charts
+  - Vertical, Horizontal and Stacked Bar Charts
+  - 3D Bar Charts
+- Bubble Charts
+- Line Charts
+  - Line Charts
+  - 3D Line Charts
+- Scatter Charts
+- Pie Charts
+  - Pie Charts
+  - Projected Pie Charts
+  - 3D Pie Charts
+  - Gradient Pie Charts
+- Doughnut Charts
+- Radar Charts
+- Stock Charts
+- Surface charts
+
+[_Docs openpyxl - Charts_](https://openpyxl.readthedocs.io/en/stable/charts/introduction.html)
 
 
 ---
 ## Formulas con excel
 
+Ver las formulas existentes y saber si esta soportado por openpyxl:
+
+```python
+from openpyxl.utils import FORMULAE
+print(FORMULAE)
+
+print(f"Existe SUM:  {'SUM' in FORMULAE}")
+print(f"Existe SUMA: {'SUMA' in FORMULAE}")
+```
+
+Algunos ejemplos:
+
+```python
+# ...
+sheet["P2"] = '=AVERAGE(H2:H100)'
+sheet["P3"] = '=COUNTIF(I2:I100, ">0")'
+sheet['R2'] = '=COUNTIF(E2:E16220, "Sports")'
+sheet['P3'] = '=COUNTA(E2:E16220)'
+sheet['S2'] = '=SUMIF(E2:E16220, "Sports", K2:K16220)'
+sheet['T2'] = '=CEILING(S2,25)'
+```
+
+- Las formulas estan en ingles
+- Separar los parametros por comas
+- Cuidar las comillas
 
 
 ---
